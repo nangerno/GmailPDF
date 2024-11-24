@@ -40,6 +40,10 @@ async def home(request: Request):
         return templates.TemplateResponse("home.html", {"request": request, "user": user})
     return templates.TemplateResponse("login.html", {"request": request})
 
+@app.get("/contactus", response_class=HTMLResponse)
+async def contactus(request: Request):
+    return templates.TemplateResponse("contactus.html", {"request": request})
+
 @app.get("/login")
 async def login(request: Request):
     redirect_uri = request.url_for('auth')
