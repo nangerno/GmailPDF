@@ -18,6 +18,7 @@ CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 OPENAI_APIKEY = os.getenv('OPENAI_APIKEY')
 SECRET_KEY = os.getenv('SECRET_KEY')
+
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 templates = Jinja2Templates(directory="static")
@@ -29,7 +30,11 @@ oauth.register(
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
-    client_kwargs={'scope': 'openid email profile https://www.googleapis.com/auth/gmail.readonly'}
+    client_kwargs={
+        'scope': 'openid email profile https://www.googleapis.com/auth/gmail.readonly',
+        'access_type': 'offline',
+        'prompt': 'consent'
+    }
 )
 openai.api_key = OPENAI_APIKEY
 
@@ -84,7 +89,7 @@ async def search(request: Request, query: str):
     )
 
     gmail_service = build('gmail', 'v1', credentials=credentials)
-    search_query = f"has:attachment filename:pdf {query}"
+    search_query = "has:attachment filename:pdf"
     results = gmail_service.users().messages().list(userId='me', q=search_query).execute()
     messages = results.get('messages', [])
 
@@ -99,8 +104,11 @@ async def search(request: Request, query: str):
                 attachment_data = gmail_service.users().messages().attachments().get(userId='me', messageId=message['id'], id=attachment_id).execute()
                 data = attachment_data['data']
                 pdf_data = base64.urlsafe_b64decode(data.encode('UTF-8'))
-                pdf_text = extract_pdf_text(pdf_data)
-                gpt_response = analyze_pdf_with_gpt(pdf_text, query)
+                
+                # Extract text chunks and analyze them
+                pdf_text_chunks = extract_pdf_text_chunks(pdf_data)
+                gpt_response = analyze_pdf_with_gpt(pdf_text_chunks, query)
+                
                 pdf_list.append({
                     "id": message['id'],
                     "subject": subject,
@@ -110,28 +118,41 @@ async def search(request: Request, query: str):
 
     return templates.TemplateResponse("results.html", {"request": request, "pdfs": pdf_list})
 
-def extract_pdf_text(pdf_data: bytes) -> str:
+def extract_pdf_text_chunks(pdf_data: bytes, chunk_size: int = 3000) -> list:
+    """
+    Extract text from a PDF and split it into manageable chunks.
+    """
     pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
     text = ""
     for page in pdf_reader.pages:
         text += page.extract_text()
-    return text
+    
+    # Split text into smaller chunks
+    return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
 
-def analyze_pdf_with_gpt(pdf_text: str, query: str) -> str:
-    prompt = (
-        f"Analyze the following content and classify it according to the query: '{query}'\n\n"
-        f"Content:\n{pdf_text}\n"
-        "Please provide a concise and accurate classification."
-    )
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a professional assistant with expertise in text analysis."},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=500
-    )
-    return response['choices'][0]['message']['content'].strip()
+def analyze_pdf_with_gpt(pdf_text_chunks: list, query: str) -> str:
+    """
+    Analyze PDF content in chunks with GPT and return a summarized result.
+    """
+    summaries = []
+    for chunk in pdf_text_chunks:
+        prompt = (
+            f"Analyze the content below to classify it according to the query: '{query}'\n\n"
+            f"Content:\n{chunk}\n"
+            "Provide a concise summary and classification of the relevant information."
+        )
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a professional assistant with expertise in text analysis."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=500
+        )
+        summaries.append(response['choices'][0]['message']['content'].strip())
+    
+    # Combine summaries into a single response
+    return "\n\n".join(summaries)
 
 if __name__ == "__main__":
     import uvicorn
