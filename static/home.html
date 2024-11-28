@@ -1,128 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gmail PDF Search</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Speede.fit.ai</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7fc;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fc;
-            color: #333;
-            line-height: 1.6;
-        }
+      header {
+        background-color: #4285f4;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
 
-        header {
-            background-color: #007BFF;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-        }
+      h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+      }
 
-        header h1 {
-            font-size: 2.5rem;
-        }
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
 
-        header p {
-            font-size: 1.1rem;
-        }
+      label {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+        display: block;
+      }
 
-        header a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1rem;
-            margin-top: 10px;
-            display: inline-block;
-            padding: 5px 15px;
-            background-color: #f44336;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
+      input[type="text"] {
+        background-color: #ffffff;
+        color: #333;
+        padding: 10px 20px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        font-size: 1.1em;
+        width: 100%;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+      }
 
-        header a:hover {
-            background-color: #d32f2f;
-        }
+      input[type="text"]:focus {
+        outline: none;
+        border: 2px solid #4285f4;
+        box-shadow: 0 0 5px rgba(66, 133, 244, 0.3);
+      }
 
-        main {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 150px);
-            padding: 20px;
-        }
+      button {
+        background-color: #4285f4;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 1.1em;
+        cursor: pointer;
+        width: 100%;
+      }
 
-        form {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
+      button:hover {
+        background-color: #1165ec;
+      }
 
-        form input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+      .logout {
+        text-align: center;
+        margin-top: 20px;
+      }
 
-        form button {
-            padding: 10px 20px;
-            font-size: 1.1rem;
-            color: #fff;
-            background-color: #007BFF;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+      .logout a {
+        color: #4285f4;
+        text-decoration: none;
+        font-weight: bold;
+      }
 
-        form button:hover {
-            background-color: #0056b3;
-        }
+      .logout a:hover {
+        text-decoration: underline;
+      }
 
-        footer {
-            text-align: center;
-            padding: 10px 0;
-            background-color: #f1f1f1;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-            font-size: 0.9rem;
-        }
+      footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #888;
+      }
+
+      footer a {
+        color: #4285f4;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <header>
-        <h1>Gmail PDF Search</h1>
-        <p>Welcome, {{ user.name }}!</p>
-        <a href="/logout">Logout</a>
+      <h1>Welcome, {{ user["name"] }}</h1>
     </header>
 
-    <main>
-        <form action="/search" method="get">
-            <input type="text" name="query" placeholder="Search for PDFs..." required>
-            <button type="submit">Search</button>
-        </form>
-    </main>
+    <div class="container">
+      <form method="get" action="/search" class="search-form">
+        <input
+          type="text"
+          id="query"
+          name="query"
+          required
+          placeholder="Enter keyword to search PDFs"
+          class="search-input"
+        />
+        <button type="submit" class="search-button">Search</button>
+      </form>
+      <div class="logout">
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
 
     <footer>
-        <p>&copy; 2024 Gmail PDF Search. All Rights Reserved.</p>
+      <p>
+        By using this service, you agree to our
+        <a href="/contactus">Terms of Service</a> and
+        <a href="/contactus">Privacy Policy</a>.
+      </p>
     </footer>
-
-</body>
-
+  </body>
 </html>

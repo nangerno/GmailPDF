@@ -74,11 +74,15 @@ async def logout(request: Request):
     return RedirectResponse(url='/')
 
 @app.get("/search")
-async def search(request: Request, query: str):
+async def search(request: Request, query: str = None):
     user = request.session.get('user')
     if not user:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
+    if not query:
+        raise HTTPException(status_code=400, detail="Search query is required.")
+    
+    # Fetch the user's OAuth token from the session
     token = request.session.get('token')
     credentials = Credentials(
         token=token['access_token'],
@@ -88,8 +92,11 @@ async def search(request: Request, query: str):
         client_secret=CLIENT_SECRET
     )
 
+    # Build the Gmail service
     gmail_service = build('gmail', 'v1', credentials=credentials)
-    search_query = "has:attachment filename:pdf"
+
+    # Modify the search query to find PDFs matching the user input keyword
+    search_query = f"has:attachment filename:pdf {query}"
     results = gmail_service.users().messages().list(userId='me', q=search_query).execute()
     messages = results.get('messages', [])
 
@@ -98,15 +105,18 @@ async def search(request: Request, query: str):
         msg = gmail_service.users().messages().get(userId='me', id=message['id']).execute()
         subject = next(header['value'] for header in msg['payload']['headers'] if header['name'] == 'Subject')
         attachments = msg['payload'].get('parts', [])
+        
         for attachment in attachments:
             if 'filename' in attachment and attachment['filename'].endswith('.pdf'):
                 attachment_id = attachment['body']['attachmentId']
                 attachment_data = gmail_service.users().messages().attachments().get(userId='me', messageId=message['id'], id=attachment_id).execute()
                 data = attachment_data['data']
                 pdf_data = base64.urlsafe_b64decode(data.encode('UTF-8'))
+
+                # Extract the first 100 sentences of the PDF
+                pdf_text_chunks = extract_pdf_first_100_sentences(pdf_data)
                 
-                # Extract text chunks and analyze them
-                pdf_text_chunks = extract_pdf_text_chunks(pdf_data)
+                # Analyze the PDF with GPT based on the user's search query
                 gpt_response = analyze_pdf_with_gpt(pdf_text_chunks, query)
                 
                 pdf_list.append({
@@ -118,41 +128,47 @@ async def search(request: Request, query: str):
 
     return templates.TemplateResponse("results.html", {"request": request, "pdfs": pdf_list})
 
-def extract_pdf_text_chunks(pdf_data: bytes, chunk_size: int = 3000) -> list:
+def extract_pdf_first_100_sentences(pdf_data: bytes) -> str:
     """
-    Extract text from a PDF and split it into manageable chunks.
+    Extract text from a PDF and retrieve the first 100 sentences.
     """
-    pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
-    text = ""
-    for page in pdf_reader.pages:
-        text += page.extract_text()
-    
-    # Split text into smaller chunks
-    return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
+    try:
+        pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
+        text = ""
+        for page in pdf_reader.pages:
+            text += page.extract_text()
+        # Extract first 100 sentences
+        sentences = text.split('.')
+        return '. '.join(sentences[:100])
+    except PyPDF2.errors.DependencyError as e:
+        print(f"Decryption Error: {e}")
+        return "Error decrypting PDF."
+    except Exception as e:
+        print(f"Error reading PDF: {e}")
+        return "Error processing PDF."
 
-def analyze_pdf_with_gpt(pdf_text_chunks: list, query: str) -> str:
+def analyze_pdf_with_gpt(pdf_content: str, query: str) -> str:
     """
-    Analyze PDF content in chunks with GPT and return a summarized result.
+    Analyze PDF content with GPT and return a summarized result.
     """
-    summaries = []
-    for chunk in pdf_text_chunks:
+    try:
         prompt = (
             f"Analyze the content below to classify it according to the query: '{query}'\n\n"
-            f"Content:\n{chunk}\n"
+            f"Content:\n{pdf_content}\n"
             "Provide a concise summary and classification of the relevant information."
         )
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[
+            messages=[ 
                 {"role": "system", "content": "You are a professional assistant with expertise in text analysis."},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=500
         )
-        summaries.append(response['choices'][0]['message']['content'].strip())
-    
-    # Combine summaries into a single response
-    return "\n\n".join(summaries)
+        return response['choices'][0]['message']['content'].strip()
+    except Exception as e:
+        print(f"Error with GPT analysis: {e}")
+        return "Error analyzing PDF content."
 
 if __name__ == "__main__":
     import uvicorn
