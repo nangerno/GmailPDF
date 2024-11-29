@@ -1,15 +1,15 @@
-# Speede.fit.ai - Privacy Policy and Terms of Service
+# SPEEDE.fit.ai - Privacy Policy and Terms of Service
 
-This repository contains the Privacy Policy and Terms of Service for Speede.fit.ai, which is a service designed to help users optimize their fitness journeys.
+This repository contains the Privacy Policy and Terms of Service for SPEEDE.fit.ai, which is a service designed to help users optimize their fitness journeys.
 
 ## Project Overview
 
-Speede.fit.ai is committed to protecting your privacy while delivering a seamless user experience. This repository includes the necessary documentation and front-end code for presenting the Privacy Policy and Terms of Service on your website or app.
+SPEEDE.fit.ai is committed to protecting your privacy while delivering a seamless user experience. This repository includes the necessary documentation and front-end code for presenting the Privacy Policy and Terms of Service on your website or app.
 
 ## Features
 
 - **Privacy Policy**: Describes how we collect, use, and protect user data.
-- **Terms of Service**: Outlines the rules and guidelines for using the Speede.fit.ai service.
+- **Terms of Service**: Outlines the rules and guidelines for using the SPEEDE.fit.ai service.
 - **Responsive Design**: The app adapts seamlessly to different screen sizes.
 - **Security and Data Privacy**: Complies with relevant data protection regulations to ensure user information is safeguarded.
 

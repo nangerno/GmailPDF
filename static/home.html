@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Speede.fit.ai</title>
+    <title>SPEEDE.fit</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -11,6 +11,11 @@
         margin: 0;
         padding: 0;
         color: #333;
+        background-size: 100% 100%;
+        background-image: url("static/background.jpg");
+        background-position: center center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
       }
 
       header {
@@ -27,7 +32,7 @@
 
       .container {
         max-width: 600px;
-        margin: 50px auto;
+        margin: 170px auto;
         padding: 20px;
         background-color: white;
         border-radius: 8px;
@@ -108,12 +113,13 @@
   </head>
 
   <body>
-    <header>
+    <!-- <header>
       <h1>Welcome, {{ user["name"] }}</h1>
-    </header>
+    </header> -->
 
     <div class="container">
       <form method="get" action="/search" class="search-form">
+        <h1>Welcome, {{ user["name"] }}</h1>
         <input
           type="text"
           id="query"

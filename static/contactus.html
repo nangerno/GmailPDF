@@ -1,176 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Privacy Policy and Terms of Service</title>
     <style>
-        /* Global Styles */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+      /* Global Styles */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            line-height: 1.7;
-            background-color: #f4f7fa;
-            color: #555;
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 1.7;
+        background-color: #f4f7fa;
+        color: #555;
+        margin: 0;
+        padding: 0;
+        background-size: 100% 100%;
+        background-image: url("static/background.jpg");
+        background-position: center center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+      }
 
+      header {
+        background-color: #0066cc;
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      main {
+        max-width: 1000px;
+        margin: 10rem auto;
+        padding: 3rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: #0066cc;
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+
+      h1 {
+        font-size: 2.4rem;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+        color: #333;
+        margin-top: 1rem;
+      }
+
+      p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        color: #555;
+        line-height: 1.8;
+      }
+
+      ul {
+        list-style-type: disc;
+        margin-left: 30px;
+        color: #555;
+      }
+
+      ul li {
+        margin-bottom: 0.8rem;
+      }
+
+      footer {
+        background-color: #f9f9f9;
+        text-align: center;
+        padding: 1.5rem;
+        font-size: 0.9rem;
+        color: #777;
+        margin-top: 3rem;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      a {
+        color: #0066cc;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      a:hover {
+        color: #004d99;
+        text-decoration: underline;
+      }
+
+      /* Responsive Styling */
+      @media (max-width: 768px) {
         header {
-            background-color: #0066cc;
-            color: white;
-            padding: 2rem;
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          font-size: 1.8rem;
+          padding: 1.5rem;
         }
 
         main {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 3rem;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        h1, h2, h3 {
-            color: #0066cc;
-            margin-bottom: 1rem;
-            font-weight: 700;
+          padding: 2rem;
         }
 
         h1 {
-            font-size: 2.4rem;
+          font-size: 2rem;
         }
 
         h2 {
-            font-size: 1.8rem;
+          font-size: 1.5rem;
         }
 
         h3 {
-            font-size: 1.3rem;
-            color: #333;
-            margin-top: 1rem;
+          font-size: 1.1rem;
         }
-
-        p {
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            color: #555;
-            line-height: 1.8;
-        }
-
-        ul {
-            list-style-type: disc;
-            margin-left: 30px;
-            color: #555;
-        }
-
-        ul li {
-            margin-bottom: 0.8rem;
-        }
-
-        footer {
-            background-color: #f9f9f9;
-            text-align: center;
-            padding: 1.5rem;
-            font-size: 0.9rem;
-            color: #777;
-            margin-top: 3rem;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        a {
-            color: #0066cc;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: #004d99;
-            text-decoration: underline;
-        }
-
-        /* Responsive Styling */
-        @media (max-width: 768px) {
-            header {
-                font-size: 1.8rem;
-                padding: 1.5rem;
-            }
-
-            main {
-                padding: 2rem;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            h3 {
-                font-size: 1.1rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-    <header>
+  </head>
+  <body>
+    <!-- <header>
         Privacy Policy and Terms of Service
-    </header>
+    </header> -->
 
     <main>
-        <section id="terms-of-service">
-            <h1>Terms of Service</h1>
-            <p><strong>Effective Date:</strong> 11/23/2024</p>
-            <p>Welcome to <strong>Speede.fit.ai</strong>. By using our services, you agree to comply with the following terms and conditions. Please read them carefully.</p>
-        
-            <h2>Account Creation</h2>
-            <p>To use certain features of our app, you must create an account and provide accurate, complete, and up-to-date information. You are responsible for maintaining the confidentiality of your account and for all activities under your account.</p>
-        
-            <h2>License</h2>
-            <p>We grant you a limited, non-exclusive, non-transferable license to access and use the app for personal, non-commercial purposes. Redistribution, modification, or resale of the app is prohibited.</p>
-        
-            <h2>Usage Rules</h2>
-            <p>By using our app, you agree not to:</p>
-            <ul>
-                <li>Engage in any illegal, harmful, or fraudulent activities.</li>
-                <li>Impersonate any person or entity, or falsely claim affiliation with any person or entity.</li>
-                <li>Use our services to violate any laws, including intellectual property rights and data protection laws.</li>
-                <li>Interfere with or disrupt the operation of the app or its associated infrastructure.</li>
-            </ul>
-        
-            <h2>Termination and Suspension</h2>
-            <p>We may suspend or terminate your access to our services at any time if you violate these Terms of Service or for any other reason, with or without notice. If your account is terminated, you will not be entitled to any compensation or refund.</p>
-        
-            <h2>Disclaimers and Limitation of Liability</h2>
-            <p>Our services are provided “as is,” and we do not guarantee that the services will meet your expectations or be error-free. We will not be liable for any damages arising from your use of the app, except to the extent required by law.</p>
-        
-            <h2>Privacy and Data Protection</h2>
-            <p>We are committed to protecting your privacy. By using our app, you consent to the collection, use, and sharing of your personal information as described in our Privacy Policy. If you do not agree with our data practices, please refrain from using the services.</p>
-        
-            <h2>Governing Law</h2>
-            <p>These Terms of Service shall be governed by the laws of the jurisdiction in which our company is located. Any disputes shall be resolved in the courts of that jurisdiction.</p>
-        
-            <h2>Contact Us</h2>
-            <p>If you have any questions or concerns regarding these Terms of Service, please contact us at <a href="mailto:nangerno@gmail.com">nangerno@gmail.com</a>.</p>
-        </section>
-        
+      <section id="terms-of-service">
+        <h1>Terms of Service</h1>
+        <p><strong>Effective Date:</strong> 11/23/2024</p>
+        <p>
+          Welcome to <strong>SPEEDE.fit</strong>. By using our services, you
+          agree to comply with the following terms and conditions. Please read
+          them carefully.
+        </p>
+
+        <h2>Account Creation</h2>
+        <p>
+          To use certain features of our app, you must create an account and
+          provide accurate, complete, and up-to-date information. You are
+          responsible for maintaining the confidentiality of your account and
+          for all activities under your account.
+        </p>
+
+        <h2>License</h2>
+        <p>
+          We grant you a limited, non-exclusive, non-transferable license to
+          access and use the app for personal, non-commercial purposes.
+          Redistribution, modification, or resale of the app is prohibited.
+        </p>
+
+        <h2>Usage Rules</h2>
+        <p>By using our app, you agree not to:</p>
+        <ul>
+          <li>Engage in any illegal, harmful, or fraudulent activities.</li>
+          <li>
+            Impersonate any person or entity, or falsely claim affiliation with
+            any person or entity.
+          </li>
+          <li>
+            Use our services to violate any laws, including intellectual
+            property rights and data protection laws.
+          </li>
+          <li>
+            Interfere with or disrupt the operation of the app or its associated
+            infrastructure.
+          </li>
+        </ul>
+
+        <h2>Termination and Suspension</h2>
+        <p>
+          We may suspend or terminate your access to our services at any time if
+          you violate these Terms of Service or for any other reason, with or
+          without notice. If your account is terminated, you will not be
+          entitled to any compensation or refund.
+        </p>
+
+        <h2>Disclaimers and Limitation of Liability</h2>
+        <p>
+          Our services are provided “as is,” and we do not guarantee that the
+          services will meet your expectations or be error-free. We will not be
+          liable for any damages arising from your use of the app, except to the
+          extent required by law.
+        </p>
+
+        <h2>Privacy and Data Protection</h2>
+        <p>
+          We are committed to protecting your privacy. By using our app, you
+          consent to the collection, use, and sharing of your personal
+          information as described in our Privacy Policy. If you do not agree
+          with our data practices, please refrain from using the services.
+        </p>
+
+        <h2>Governing Law</h2>
+        <p>
+          These Terms of Service shall be governed by the laws of the
+          jurisdiction in which our company is located. Any disputes shall be
+          resolved in the courts of that jurisdiction.
+        </p>
+
+        <h2>Contact Us</h2>
+        <p>
+          If you have any questions or concerns regarding these Terms of
+          Service, please contact us at
+          <a href="mailto:nangerno@gmail.com">nangerno@gmail.com</a>.
+        </p>
+      </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 Speede.fit.ai. All rights reserved.</p>
+      <p>&copy; 2024 SPEEDE.fitll rights reserved.</p>
     </footer>
-</body>
+  </body>
 </html>

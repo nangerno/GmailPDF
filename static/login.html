@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Speede.fit.ai</title>
+    <title>Login - SPEEDE.fit.ai</title>
     <style>
       * {
         margin: 0;
@@ -18,10 +18,14 @@
         justify-content: center;
         align-items: center;
         min-height: 100vh;
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        background-size: 100% 100%;
         background-image: url("static/background.jpg");
-        background-size: cover;
         background-position: center center;
         background-attachment: fixed;
+        background-repeat: no-repeat;
       }
 
       .login-container {
@@ -120,8 +124,8 @@
         src="static/listbuilder-icon-search.png"
         alt="Gmail PDF Search Icon"
       />
-      <h1>Welcome to Speede.fit.ai</h1>
-      <p>Log in with your Google account to access your Gmail PDFs.</p>
+      <h1>Welcome to SPEEDE.fit</h1>
+      <p>Login with your Gamil account</p>
       <a href="{{ url_for('login') }}" class="google-login-btn">
         <img
           src="https://developers.google.com/identity/images/g-logo.png"
