@@ -109,27 +109,28 @@
     </style>
   </head>
   <body>
-    <!-- <header>
-        <h1>Search Results</h1>
-    </header> -->
     <div class="container">
       {% if pdfs %}
-      <ul class="result-list">
-        {% for pdf in pdfs %}
-        <li class="result-item">
-          <strong>{{ pdf.subject }}</strong>
-          <a
-            href="https://mail.google.com/mail/u/0/#inbox/{{ pdf.id }}"
-            target="_blank"
-            >Open Email</a
-          ><br />
-          <strong>Attachment:</strong> {{ pdf.attachment }}<br />
-          <div class="summary">
-            <strong>Summary:</strong> {{ pdf.gpt_summary }}
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
+      <form method="POST" action="/download_pdfs">
+        <ul class="result-list">
+          {% for pdf in pdfs %}
+          <li class="result-item">
+            <input type="checkbox" name="pdf_ids" value="{{ pdf.id }}" />
+            <strong>{{ pdf.subject }}</strong>
+            <a
+              href="https://mail.google.com/mail/u/0/#inbox/{{ pdf.id }}"
+              target="_blank"
+              >Open Email</a
+            ><br />
+            <strong>Attachment:</strong> {{ pdf.attachment }}<br />
+            <div class="summary">
+              <strong>Summary:</strong> {{ pdf.gpt_summary }}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        <button type="submit">Download Selected PDFs</button>
+      </form>
       {% else %}
       <p class="no-results">No PDFs found matching your search query.</p>
       {% endif %}

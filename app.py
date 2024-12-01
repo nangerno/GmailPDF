@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import StreamingResponse
 from authlib.integrations.starlette_client import OAuth, OAuthError
 from starlette.middleware.sessions import SessionMiddleware
 from google.oauth2.credentials import Credentials
@@ -73,6 +74,71 @@ async def logout(request: Request):
     request.session.pop('token', None)
     return RedirectResponse(url='/')
 
+@app.post("/download_pdfs")
+async def download_pdfs(request: Request):
+    # Get the selected PDF ids from the form data
+    form_data = await request.form()
+    pdf_ids = form_data.getlist("pdf_ids")
+
+    # Fetch the user's OAuth token from the session
+    token = request.session.get('token')
+    if not token:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+    
+    credentials = Credentials(
+        token=token['access_token'],
+        refresh_token=token.get('refresh_token'),
+        token_uri='https://oauth2.googleapis.com/token',
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET
+    )
+
+    # Build the Gmail service
+    gmail_service = build('gmail', 'v1', credentials=credentials)
+
+    # Prepare the PDF data for downloading
+    pdf_data_list = []
+
+    for pdf_id in pdf_ids:
+        # Fetch the email message
+        msg = gmail_service.users().messages().get(userId='me', id=pdf_id).execute()
+        subject = next(header['value'] for header in msg['payload']['headers'] if header['name'] == 'Subject')
+        attachments = msg['payload'].get('parts', [])
+        
+        for attachment in attachments:
+            if 'filename' in attachment and attachment['filename'].endswith('.pdf'):
+                attachment_id = attachment['body']['attachmentId']
+                attachment_data = gmail_service.users().messages().attachments().get(userId='me', messageId=pdf_id, id=attachment_id).execute()
+                data = attachment_data['data']
+                pdf_data = base64.urlsafe_b64decode(data.encode('UTF-8'))
+
+                # Store the PDF data for later individual download
+                pdf_data_list.append({
+                    'filename': attachment['filename'],
+                    'data': pdf_data
+                })
+    
+    if not pdf_data_list:
+        raise HTTPException(status_code=404, detail="No PDF attachments found.")
+    
+    # Now we will return each PDF as an individual response
+    # For each PDF in the list, we will return a separate StreamingResponse
+    responses = []
+    for pdf in pdf_data_list:
+        pdf_filename = pdf['filename']
+        pdf_data = pdf['data']
+
+        # Create a StreamingResponse for each PDF
+        pdf_response = StreamingResponse(
+            io.BytesIO(pdf_data), 
+            media_type="application/pdf", 
+            headers={"Content-Disposition": f"attachment; filename={pdf_filename}"}
+        )
+        responses.append(pdf_response)
+    
+    # Return the first response for simplicity; however, you can adjust this depending on the client-side handling
+    # of multiple files.
+    return responses[0]
 @app.get("/search")
 async def search(request: Request, query: str = None):
     user = request.session.get('user')
